@@ -1,2 +1,2 @@
 # compro_library
-test
+競技プログラミングで使うライブラリ集。
