@@ -1,6 +1,6 @@
 # フローアルゴリズム
-* Ford-Fulkerson
-* Primal-Dual
+* [Ford-Fulkerson](#Ford-Fulkerson)
+* [Primal-Dual](#Primal-Dual)
 ## Ford-Fulkerson
 * Verify:
 * コードの説明:
