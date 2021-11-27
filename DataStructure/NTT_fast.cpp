@@ -53,6 +53,7 @@ template<> const Mint Mint::G = Mint(3);
 
 
 // type : ift or not
+// a.size() should be less than 1 << 23
 void nft(bool type, V<Mint>& a) {
     int n = int(a.size()), s = 0;
     while ((1 << s) < n) s++;
