@@ -22,9 +22,9 @@ template <uint MD> struct ModInt {
     }
     explicit operator bool() const { return v != 0; }
     M operator-() const { return M() - *this; }
-    M operator+(const M& r) const { return v + r.v; }
-    M operator-(const M& r) const { return v + MD - r.v; }
-    M operator*(const M& r) const { return ull(v) * r.v % MD; }
+    M operator+(const M& r) const { return M().set_v(v + r.v); }
+    M operator-(const M& r) const { return M().set_v(v + MD - r.v); } // "v + MD - r.v" can exceed MD, so set_v is needed
+    M operator*(const M& r) const { return M().set_v(ull(v) * r.v % MD); }
     M operator/(const M& r) const { return *this * r.inv(); }
     M& operator+=(const M& r) { return *this = *this + r; }
     M& operator-=(const M& r) { return *this = *this - r; }

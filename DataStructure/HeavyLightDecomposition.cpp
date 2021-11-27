@@ -3,13 +3,12 @@
 
 using namespace std;
 using G = vector<vector<int>>;
-
+using P = pair<int, int>;
+template <class T> using V = vector<T>; 
 
 class HeavyLightDecomposition {
     G &g;
-    vector<int> head, subtree_size;
-    using P = pair<int, int>;
-    template <class T> using V = vector<T>; 
+    V<int> head, subtree_size;
 
     void build(int v, int cur_head){
         head[v] = cur_head;
@@ -40,7 +39,7 @@ class HeavyLightDecomposition {
     }
 
     V<P> query(int u, int v) {
-        
+
     }
 
 public:
