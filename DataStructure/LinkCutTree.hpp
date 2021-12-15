@@ -5,13 +5,12 @@
 // verified at
 // https://atcoder.jp/contests/joisc2013-day4/submissions/27910218
 template<class T> class LinkCutTree {
-    using id_t = uint32_t;
 
     struct Node {
         Node *left, *right, *par;
-        id_t id;
+        int id;
         T value;
-        Node(id_t _id) : left(nullptr), right(nullptr), par(nullptr), id(_id), value(T()) {}
+        Node(int _id) : left(nullptr), right(nullptr), par(nullptr), id(_id), value(T()) {}
         // A node is root when it is the root of an auxiliary tree
         bool isRoot() const {
             return (!par) || (par->left != this && par->right != this);
@@ -93,16 +92,16 @@ template<class T> class LinkCutTree {
 
 public:
     Node** arr;
-    LinkCutTree(size_t node_size) {
+    LinkCutTree(int node_size) {
         arr = new Node*[node_size];
-        for (size_t i = 0; i < node_size; i++)
+        for (int i = 0; i < node_size; i++)
             arr[i] = new Node(i);
     }
 
-    void link(id_t id1, id_t id2) { link(arr[id1], arr[id2]); }
-    void cut(id_t id1) { cut(arr[id1]); }
-    id_t lca(id_t id1, id_t id2) { return lca(arr[id1], arr[id2])->id; }
-    bool connected(id_t id1, id_t id2) { return connected(arr[id1], arr[id2]); }
+    void link(int id1, int id2) { link(arr[id1], arr[id2]); }
+    void cut(int id1) { cut(arr[id1]); }
+    int lca(int id1, int id2) { return lca(arr[id1], arr[id2])->id; }
+    bool connected(int id1, int id2) { return connected(arr[id1], arr[id2]); }
 };
 
 

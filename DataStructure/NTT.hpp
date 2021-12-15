@@ -12,7 +12,7 @@ public:
     // type : ift or not
     // a.size() should be less than 1 << 23
     void nft(bool type, std::vector<Mint>& a) {
-        size_t n = a.size(), s = 0;
+        int n = (int)a.size(), s = 0;
         while ((1 << s) < n) s++;
         assert(1 << s == n);
 
@@ -47,7 +47,7 @@ public:
     }
 
     std::vector<Mint> convolution(const std::vector<Mint> &a, const std::vector<Mint> &b) {
-        size_t n = a.size(), m = b.size();
+        int n = (int)a.size(), m = (int)b.size();
         if (!n || !m) return {};
         int lg = 0;
         while ((1 << lg) < n + m - 1) lg++;
