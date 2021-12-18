@@ -8,6 +8,7 @@ template <class T> class SplayTree {
         Node *left, *right;
         T key;
     };
+    Node *root;
 
     enum dir_t {
         LEFT,
@@ -63,8 +64,11 @@ template <class T> class SplayTree {
         return splay(path);
     }
 
-    Node* root;
 public:
+    SplayTree() {
+        root = nullptr;
+    }
+
     bool find(T x) {
         if (!root) return false;
         Node *node = find_node(root, x);
