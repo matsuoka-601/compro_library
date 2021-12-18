@@ -5,6 +5,8 @@
 // this implementation is based on
 // https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-854j-advanced-algorithms-fall-2008/lecture-notes/lec6.pdf
 
+// verify:
+// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6135735#1
 template<class T> class SplayTree {
     struct Node {
         Node *left, *right, *par;
