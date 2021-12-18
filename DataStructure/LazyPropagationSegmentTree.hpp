@@ -79,3 +79,27 @@ public:
         update(a, b + 1, x, 0, 0, n);
     }
 };
+
+
+
+// Make Lazy Propagation Segment Tree like below in the source file.
+
+
+// auto make_segtree = [](size_t n) {
+//     using F = pair<Mint, Mint>;
+//     using T = Mint;
+//     auto merge_function = [](F& f, F& g) {
+//         tie(f.first, f.second) = make_tuple(f.first*g.first, g.first*f.second + g.second);
+//     };
+//     auto operate = [](T& v, F& f, size_t w) {
+//         Mint w_ = Mint(w);
+//         v = f.first * v + w_ * f.second;
+//     };
+//     auto merge_values = [](T& a, T& b) {
+//         return a + b;
+//     };
+//     F fe = {1, 0};
+//     T te = 0;
+//     return LazyPropagationSegmentTree<F, T, decltype(merge_function), decltype(operate), decltype(merge_values)>
+//                                     (n, merge_function, operate, merge_values, fe, te);
+// };
