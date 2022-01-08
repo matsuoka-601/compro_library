@@ -2,7 +2,10 @@
 #include <queue>
 #include <vector>
 #include <limits>
-#include <iostream>
+
+// verify:
+// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6190842
+
 template<class T> class Dinic {
     int V;
     std::vector<int> level, iter;
