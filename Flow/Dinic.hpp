@@ -3,6 +3,9 @@
 #include <vector>
 #include <limits>
 
+// this implementation is based on
+// https://megalodon.jp/2022-0108-1135-33/https://kopricky.github.io:443/code/NetworkFlow/dinic.html
+
 // verify:
 // https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6190842
 
