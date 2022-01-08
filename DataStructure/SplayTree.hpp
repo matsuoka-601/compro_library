@@ -154,7 +154,7 @@ public:
         join(left_root, right_root);
         tree_size -= 1;
     }
-
+    
     int size() {
         return tree_size;
     }
