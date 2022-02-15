@@ -2,6 +2,7 @@
 #include <queue>
 #include <vector>
 #include <limits>
+#include <assert.h>
 
 // this implementation is based on
 // https://megalodon.jp/2022-0108-1135-33/https://kopricky.github.io:443/code/NetworkFlow/dinic.html
@@ -12,7 +13,7 @@
 template<class T> class Dinic {
     int V;
     std::vector<int> level, iter;
-    struct edge {
+    struct Edge {
         int to, rev;
         T cap;
     };
@@ -39,7 +40,7 @@ template<class T> class Dinic {
         if (v == t)
             return f;
         for (int& i = iter[v]; i < (int)G[v].size(); i++) {
-            edge& e = G[v][i];
+            Edge& e = G[v][i];
             if (e.cap > 0 && level[v] < level[e.to]) {
                 T d = dfs(e.to, t, std::min(f, e.cap));
                 if (d > 0) {
@@ -58,6 +59,7 @@ public:
         V(node_size), level(V), iter(V), G(V) {}
 
     void add_edge(int from, int to, T cap) {
+        assert(from != to);
         G[from].push_back({to, (int)G[to].size(), cap});
         G[to].push_back({from, (int)G[from].size() - 1, (T)0});
     }
