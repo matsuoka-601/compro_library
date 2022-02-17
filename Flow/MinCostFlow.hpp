@@ -1,5 +1,8 @@
 #pragma once
 #include <assert.h>
+#include <queue>
+#include <iostream>
+#include <limits>
 
 template<class CapType, typename CostType> class MinCostFlow {
     struct Edge {
@@ -7,59 +10,96 @@ template<class CapType, typename CostType> class MinCostFlow {
         CapType cap;
         CostType cost;
     };
-    int V;
+
+    struct EdgeInfo {
+        int v, offset;
+        CapType cap_min, cap_max;
+        bool is_negative;
+    };
+
+    using P = std::pair<CostType, int>;
+
+    int n_tot, n;
     const CostType inf;
-    std::vector< std::vector<Edge> > G;
-    std::vector<CapType> B;
-    bool after_setting_B = false;
+    std::vector< std::vector<Edge> > g;
+    std::vector<CapType> b;
+    std::vector<int> prevv, preve;
+    std::vector<CostType> h, dist;
+    std::vector<EdgeInfo> edge_infos;
     CostType res = 0;
 
 public:
     MinCostFlow(int node_size) : 
-        V(node_size + 2), inf(numeric_limits<CostType>::max()),
-        G(V), h(V, 0), dist(V), prevv(V), preve(V), B(V) {}
+        n_tot(node_size + 2), n(node_size), inf(std::numeric_limits<CostType>::max()),
+        g(n_tot), h(n_tot, 0), dist(n_tot), prevv(n_tot), preve(n_tot), b(n) {}
 
 
     CostType solve() {
-        int s = V - 2;
-        int t = V - 1;
+        int s = n_tot - 2;
+        int t = n_tot - 1;
+
+        CapType f = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (b[i] > 0) {
+                add_edge(s, i, 0, b[i], 0);
+                f += b[i];
+            } else if (b[i] < 0) {
+                add_edge(i, t, 0, -b[i], 0);
+                f += -b[i];
+            }
+        }
+
+        f /= 2;
 
         while(f > 0) {
+            std::priority_queue<P, std::vector<P>, std::greater<P> > que;
             std::fill(dist.begin(), dist.end(), inf);
             dist[s] = 0;
-            que.push();
+            que.push({0, s});
             while(!que.empty()) {
+                P p = que.top(); que.pop();
                 int v = p.second;
                 if (dist[v] < p.first) continue;
-                for (int i = 0; i < (int)G[v].size(); i++) {
-                    Edge &e = G[v][i];
-                    if (e.cap > 0 && dist[e.to] > dist[v] + e.cost + h[v] - h[e.to]) {
-                        dist[e.to] = dist[v] + e.cost + h[v] - h[e.to];
+                for (int i = 0; i < (int)g[v].size(); i++) {
+                    Edge &e = g[v][i];
+                    CostType diff = e.cost + h[v] - h[e.to];
+                    if (e.cap > 0 && dist[e.to] > dist[v] + diff) {
+                        dist[e.to] = dist[v] + diff;
                         prevv[e.to] = v, preve[e.to] = i;
-                        que.push(pti(dist[e.to], e.to));
+                        que.push({dist[e.to], e.to});
                     }
                 }
             }
+
             if (dist[t] == inf) {
-                printf("infeasible\n");
+                std::cout << "-1" << std::endl;
                 exit(0);
             }
 
-            for (int i = 0; i < V; i++) h[i] += dist[i];
+            for (int i = 0; i < n_tot; i++) h[i] += dist[i];
 
             CapType d = f;
             for (int v = t; v != s; v = prevv[v]) {
-                d = std::min(d, G[prevv[v]][preve[v]].cap);
+                d = std::min(d, g[prevv[v]][preve[v]].cap);
             }
 
             f -= d;
             res += h[t] * d;
             for (int v = t; v != s; v = prevv[v]) {
-                Edge& e = G[prevv[v]][preve[v]];
+                Edge& e = g[prevv[v]][preve[v]];
                 e.cap -= d;
-                G[v][e.rev].cap += d;
+                g[v][e.rev].cap += d;
             }
         }
+
+        return res;
+    }
+
+    CostType solve(int s, int t, CapType f) {
+        assert(f > 0);
+        b[s] = f; b[t] = -f;
+        return solve();
     }
     
     void add_edge(int from, int to, 
@@ -67,35 +107,48 @@ public:
         assert(cap_max >= cap_min);
         assert(cap_min >= 0);
         assert(from != to);
-        assert(after_setting_B);
 
         if (cap_min != 0) {
-            B[from] -= cap_min;
-            B[to] += cap_min;
+            b[from] -= cap_min;
+            b[to] += cap_min;
             res += cap_min * cost;
-            cap_max -= cap_min;
         }
 
+        CapType cap_diff = cap_max - cap_min;
+
         if(cost < 0) {
-            res += cap_max * cost;
-            B[from] += cap_max;
-            B[to] -= cap_max;
-            G[to].push_back({from, (int)G[from].size(), cap, -cost});
-            G[from].push_back({to, (int)G[to].size() - 1, 0, cost});
+            res += cap_diff * cost;
+            b[from] += cap_diff;
+            b[to] -= cap_diff;
+            g[to].push_back({from, (int)g[from].size(), cap_diff, -cost});
+            g[from].push_back({to, (int)g[to].size() - 1, 0, cost});
+            edge_infos.push_back({from, (int)g[from].size() - 1, cap_min, cap_max, true});
         } else {
-            G[from].push_back({to, (int)G[to].size(), cap, cost});
-            G[to].push_back({from, (int)G[from].size() - 1, 0, -cost});
+            g[from].push_back({to, (int)g[to].size(), cap_diff, cost});
+            g[to].push_back({from, (int)g[from].size() - 1, 0, -cost});
+            edge_infos.push_back({to, (int)g[to].size() - 1, cap_min, cap_max, false});
         }
     }
 
-    void set_B(std::vector<CapType> &B_to_set) {
-        assert(!after_setting_B);
-        assert(V == (int)B_to_set.size());
-        after_setting_B = true;
-        CapType sum = 0;
-        for (int i = 0; i < V; i++) sum += B_to_set[i];
-        assert(sum == 0);
+    void add_edge(int from, int to, CapType cap, CostType cost){
+        add_edge(from, to, 0, cap, cost);
+    }
 
-        std::copy(B_to_set.begin(), B_to_set.end(), B.begin());
+    void set_b(std::vector<CapType> &b_) {
+        assert(n == (int)b_.size());
+        CapType sum = 0;
+        for (int i = 0; i < n; i++) sum += b_[i];
+        assert(sum == 0);
+        std::copy(b_.begin(), b_.end(), b.begin());
+    }
+
+    CapType get_edge(int i) {
+        EdgeInfo &ei = edge_infos[i];
+        Edge &e = g[ei.v][ei.offset];
+        CapType ret = e.cap;
+
+        if (ei.is_negative) ret = (ei.cap_max - ei.cap_min) - ret;
+        ret += ei.cap_min;
+        return ret;
     }
 };
