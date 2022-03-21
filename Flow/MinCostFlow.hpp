@@ -4,6 +4,12 @@
 #include <iostream>
 #include <limits>
 
+// this implementation is based on
+// https://megalodon.jp/2022-0321-1006-53/https://ei1333.hateblo.jp:443/entry/2019/12/15/094229
+// verify:
+// https://atcoder.jp/contests/practice2/submissions/30316518
+// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6331152
+
 template<class CapType, class CostType> class MinCostFlow {
     struct Edge {
         int to, rev;
