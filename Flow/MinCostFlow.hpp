@@ -4,7 +4,7 @@
 #include <iostream>
 #include <limits>
 
-template<class CapType, typename CostType> class MinCostFlow {
+template<class CapType, class CostType> class MinCostFlow {
     struct Edge {
         int to, rev;
         CapType cap;
@@ -22,9 +22,9 @@ template<class CapType, typename CostType> class MinCostFlow {
     int n_tot, n;
     const CostType inf;
     std::vector< std::vector<Edge> > g;
-    std::vector<CapType> b;
-    std::vector<int> prevv, preve;
     std::vector<CostType> h, dist;
+    std::vector<int> prevv, preve;
+    std::vector<CapType> b;
     std::vector<EdgeInfo> edge_infos;
     CostType res = 0;
 
@@ -118,8 +118,8 @@ public:
 
         if(cost < 0) {
             res += cap_diff * cost;
-            b[from] += cap_diff;
-            b[to] -= cap_diff;
+            b[from] -= cap_diff;
+            b[to] += cap_diff;
             g[to].push_back({from, (int)g[from].size(), cap_diff, -cost});
             g[from].push_back({to, (int)g[to].size() - 1, 0, cost});
             edge_infos.push_back({from, (int)g[from].size() - 1, cap_min, cap_max, true});
