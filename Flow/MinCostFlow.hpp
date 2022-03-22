@@ -3,12 +3,16 @@
 #include <queue>
 #include <iostream>
 #include <limits>
+#include <vector>
 
 // this implementation is based on
 // https://megalodon.jp/2022-0321-1006-53/https://ei1333.hateblo.jp:443/entry/2019/12/15/094229
 // verify:
 // https://atcoder.jp/contests/practice2/submissions/30316518
 // https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6331152
+
+
+
 
 template<class CapType, class CostType> class MinCostFlow {
     struct Edge {
@@ -25,7 +29,7 @@ template<class CapType, class CostType> class MinCostFlow {
 
     using P = std::pair<CostType, int>;
 
-    int n_tot, n;
+    int n_tot, n, s, t;
     const CostType inf;
     std::vector< std::vector<Edge> > g;
     std::vector<CostType> h, dist;
@@ -36,14 +40,12 @@ template<class CapType, class CostType> class MinCostFlow {
 
 public:
     MinCostFlow(int node_size) : 
-        n_tot(node_size + 2), n(node_size), inf(std::numeric_limits<CostType>::max()),
+        n_tot(node_size + 2), n(node_size), s(n_tot - 2), t(n_tot - 1), 
+        inf(std::numeric_limits<CostType>::max()),
         g(n_tot), h(n_tot, 0), dist(n_tot), prevv(n_tot), preve(n_tot), b(n) {}
 
 
     CostType solve() {
-        int s = n_tot - 2;
-        int t = n_tot - 1;
-
         CapType f = 0;
 
         for (int i = 0; i < n; i++) {
