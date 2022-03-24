@@ -42,7 +42,6 @@ class SCC {
     std::vector<bool> used;
     std::vector<int> ord;
 public:
-    std::vector< std::vector<int> > group_list;
     std::vector<int> cmp;
 
     SCC(Graph &g): n((int)g.size()), n_group(0), g(g), used(n), cmp(n){
@@ -53,14 +52,15 @@ public:
         build();
     }
 
-    void make_group_list() {
-        group_list.resize(n_group);
+    std::vector< std::vector<int> > make_group_list() {
+        std::vector< std::vector<int> > group_list(n_group);
         for (int i = 0; i < n; i++) group_list[cmp[i]].push_back(i);
+        return group_list;
     }
 
     Graph rebuild() {
         Graph ret_g(n_group);
-        make_group_list();
+        auto group_list = make_group_list();
 
         std::vector<bool> marked_fl(n_group, false);
         for (int i = 0; i < n_group; i++) {
