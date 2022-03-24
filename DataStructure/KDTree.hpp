@@ -5,6 +5,7 @@
 
 // verify: 
 // https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6424837
+// https://atcoder.jp/contests/arc010/submissions/30376565
 
 template<class T> class Point {
 public:
