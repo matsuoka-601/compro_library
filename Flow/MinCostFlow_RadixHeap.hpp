@@ -4,17 +4,15 @@
 #include <iostream>
 #include <limits>
 #include <vector>
+#include "DataStructure/RadixHeap.hpp"
 
 // this implementation is based on
 // https://megalodon.jp/2022-0321-1006-53/https://ei1333.hateblo.jp:443/entry/2019/12/15/094229
 // verify:
-// https://atcoder.jp/contests/practice2/submissions/30316518
-// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6331152
+// https://atcoder.jp/contests/practice2/submissions/30697263
 
 
-
-
-template<class CapType, class CostType> class MinCostFlow {
+template <class CapType, class CostType> class MinCostFlow_RadixHeap {
     struct Edge {
         int to, rev;
         CapType cap;
@@ -39,11 +37,16 @@ template<class CapType, class CostType> class MinCostFlow {
     CostType res = 0;
 
 public:
-    MinCostFlow(int node_size) : 
+    MinCostFlow_RadixHeap(int node_size) : 
         n_tot(node_size + 2), n(node_size), s(n_tot - 2), t(n_tot - 1), 
         inf(std::numeric_limits<CostType>::max()),
         g(n_tot), h(n_tot, 0), dist(n_tot), prevv(n_tot), preve(n_tot), b(n) {}
 
+    CostType solve(int s, int t, CapType f) {
+        assert(f > 0);
+        b[s] = f; b[t] = -f;
+        return solve();
+    }
 
     CostType solve() {
         CapType f = 0;
@@ -61,12 +64,12 @@ public:
         f /= 2;
 
         while(f > 0) {
-            std::priority_queue<P, std::vector<P>, std::greater<P> > que;
+            RadixHeap<CostType, int> que;
             std::fill(dist.begin(), dist.end(), inf);
             dist[s] = 0;
-            que.push({0, s});
+            que.push(0, s);
             while(!que.empty()) {
-                P p = que.top(); que.pop();
+                P p = que.pop();
                 int v = p.second;
                 if (dist[v] < p.first) continue;
                 for (int i = 0; i < (int)g[v].size(); i++) {
@@ -75,7 +78,7 @@ public:
                     if (e.cap > 0 && dist[e.to] > dist[v] + diff) {
                         dist[e.to] = dist[v] + diff;
                         prevv[e.to] = v, preve[e.to] = i;
-                        que.push({dist[e.to], e.to});
+                        que.push(dist[e.to], e.to);
                     }
                 }
             }
@@ -104,11 +107,6 @@ public:
         return res;
     }
 
-    CostType solve(int s, int t, CapType f) {
-        assert(f > 0);
-        b[s] = f; b[t] = -f;
-        return solve();
-    }
     
     void add_edge(int from, int to, 
         CapType cap_min, CapType cap_max, CostType cost) {
