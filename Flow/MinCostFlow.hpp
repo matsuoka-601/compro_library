@@ -104,9 +104,9 @@ public:
         return res;
     }
 
-    CostType solve(int s, int t, CapType f) {
+    CostType solve(int s_, int t_, CapType f) {
         assert(f > 0);
-        b[s] = f; b[t] = -f;
+        b[s_] = f; b[t_] = -f;
         return solve();
     }
     

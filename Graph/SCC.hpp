@@ -37,14 +37,15 @@ class SCC {
             if (!used[v]) rdfs(v, n_group++);
     }
 
-    int n, n_group;
+    int n;
     Graph g, rg;
     std::vector<bool> used;
     std::vector<int> ord;
 public:
+    int n_group;
     std::vector<int> cmp;
 
-    SCC(Graph &g): n((int)g.size()), n_group(0), g(g), used(n), cmp(n){
+    SCC(Graph &g): n((int)g.size()), g(g), used(n), n_group(0), cmp(n){
         rg.resize(n);
         for (int i = 0; i < n; i++)
             for (auto to: g[i]) 
