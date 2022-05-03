@@ -3,7 +3,12 @@
 #include <vector>
 #include <numeric>
 #include <algorithm>
+#include <assert.h>
+#include "DataStructure/SparseTable.hpp"
 
+// this implemantation is based on
+// https://megalodon.jp/2022-0430-1612-24/https://wk1080id.hatenablog.com:443/entry/2018/12/25/005926
+// the construction of suffix array is O(nlogn), where n is the length of the string
 
 class SuffixArray
 {
@@ -44,13 +49,51 @@ class SuffixArray
         return p;
     }
 
+    void calc_lcp(std::string &s) {
+        int n = sa.size();
+        int slen = n - 1;
+
+        rank.resize(n);
+        lcp.resize(n);
+        for (int i = 0; i < n; i++) rank[sa[i]] = i; 
+
+        int h = 0;
+        lcp[0] = 0;
+        for (int i = 0; i < slen; i++) {
+            int j = sa[rank[i] - 1];
+
+            if (h > 0) h--;
+            for (; j + h < n && i + h < n; h++)
+                if (s[j + h] != s[i + h]) break;
+
+            lcp[rank[i] - 1] = h;
+        }
+
+        st.build(lcp);
+    }
+    
+
 public:
-    std::vector<int> sa;
-    SuffixArray(std::string &s)
+    std::vector<int> sa, lcp, rank;
+    SparseTable<int> st;
+    bool need_lcp;
+
+    SuffixArray(std::string &s, bool need_lcp = true): 
+        need_lcp(need_lcp)
     {
         s.push_back('$');
         sa = sort_cyclic_shifts(s);
-        sa.erase(sa.begin());
         s.pop_back();
+
+        if (need_lcp) calc_lcp(s);
     }
+
+    int get_lcp(int i, int j) {
+        assert(need_lcp && i != j);
+        int rank_i = rank[i];
+        int rank_j = rank[j];
+        if (rank_i > rank_j) std::swap(rank_i, rank_j);
+        return st.rmq(rank_i, rank_j);
+    }
+    
 };

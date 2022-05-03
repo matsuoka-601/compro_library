@@ -11,6 +11,7 @@ template <int char_size, int margin> class AhoCorasick :
     using Node = typename Trie<char_size + 2, margin>::Node;
     using Trie<char_size + 2, margin>::nodes;
     using Trie<char_size + 2, margin>::root;
+
     const int FAIL = char_size;
     const int OUTPUT = char_size + 1;
 
