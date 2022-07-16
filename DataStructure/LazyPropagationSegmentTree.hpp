@@ -71,13 +71,23 @@ public:
     }
 
     // calculate the value of [a, b]
-    T get_between(int a, int b) {
+    T get_between_inclusive(int a, int b) {
         return query(a, b + 1, 0, 0, n);
     }
 
-    void update_between(int a, int b, F x) {
+    // update the value of [a, b]
+    void update_between_inclusive(int a, int b, F x) {
         update(a, b + 1, x, 0, 0, n);
     }
+
+    T get_between(int a, int b) {
+        return query(a, b, 0, 0, n);
+    }
+
+    void update_between(int a, int b, F x) {
+        update(a, b, x, 0, 0, n);
+    }
+
 };
 
 
