@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 
 class CentroidDecomposition {
@@ -48,3 +49,76 @@ public:
 
     void solve_main(int centroid);
 };
+
+
+
+// usage:
+// ll dfs(int v, int par, vector<int> &col_to_vec, const Graph &g, vector<bool> &checked) {
+//     col_cnt[c[v]]++;
+ 
+//     if (!col_tmp_fl[c[v]]) {
+//         col_tmp_fl[c[v]] = true;
+//         col_to_vec.push_back(c[v]);
+//     }
+ 
+//     int sz = 1;
+//     for (auto to: g[v]) {
+//         if (checked[to] || to == par) continue;
+//         sz += dfs(to, v, col_to_vec, g, checked);
+//     }
+ 
+//     if (col_cnt[c[v]] == 1) {
+//         col_subtree_size_sum[c[v]] += sz;
+//     }
+ 
+//     col_cnt[c[v]]--;
+//     return sz;
+// }
+ 
+// void CentroidDecomposition::solve_main(int centroid) {
+//     vector<int> col_vec;
+ 
+//     ll subsum = 0;
+//     ll sub_sqsum = 0;
+//     for (auto to: g[centroid]) {
+//         if (checked[to]) continue;
+ 
+//         vector<int> col_to_vec;
+//         ll to_subtree_size = dfs(to, centroid, col_to_vec, g, checked);
+//         subsum += to_subtree_size;
+//         sub_sqsum += to_subtree_size * to_subtree_size;
+        
+//         for (auto col: col_to_vec) {
+//             if (!col_fl[col]) {
+//                 col_fl[col] = true;
+//                 col_vec.push_back(col);
+//             }
+//             if (col == c[centroid]) continue;
+//             ll y = col_subtree_size_sum[col];
+//             col_sum[col] += y;
+//             col_sqsum[col] += y * y;
+//             col_subsum[col] += to_subtree_size * y;
+ 
+//             col_subtree_size_sum[col] = 0;
+//             col_tmp_fl[col] = false;
+//         }
+//     }
+ 
+//     if (!col_fl[c[centroid]]) {
+//         col_vec.push_back(c[centroid]);
+//     }
+ 
+//     for (auto col: col_vec) {
+//         if (col != c[centroid]) {
+//             ll term1 = (subsum - col_sum[col]) * col_sum[col] + col_sqsum[col] - col_subsum[col];
+//             ll term2 = (col_sum[col] * col_sum[col] - col_sqsum[col]) / 2;
+//             ll term3 = col_sum[col];
+//             ans[col] += term1 + term2 + term3;
+//         }
+//         else {
+//             ans[col] += subsum + (subsum * subsum - sub_sqsum) / 2 + 1;
+//         }
+//         col_sum[col] = col_sqsum[col] = col_subtree_size_sum[col] = col_subsum[col] = 0;
+//         col_fl[col] = col_tmp_fl[col] = false;
+//     }
+// }
