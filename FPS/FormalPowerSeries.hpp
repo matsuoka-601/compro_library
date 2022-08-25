@@ -36,3 +36,37 @@ public:
         return *this;
     }
 };
+
+
+// usage
+// #include <iostream>
+// #include <vector>
+// #include "Utils/ModInt.hpp"
+// #include "FPS/FormalPowerSeries.hpp"
+
+// using namespace std;
+// using ll = long long;
+
+// constexpr int MOD = 1e9 + 7;
+// using Mint = ModInt<MOD>;
+// using FPS = FormalPowerSeries<Mint>;
+// using SFPS = vector<pair<int, Mint>>;
+
+// int main() {
+//     ios::sync_with_stdio(false);
+//     cin.tie(nullptr);
+
+//     int N, K;
+//     cin >> N >> K;
+
+
+//     FPS f({1, -1});
+//     f.resize(N + 1);
+//     f *= SFPS{{1, 1}, {K, -1}};
+//     f /= SFPS{{0, 1}, {1, -2}, {K + 1, 1}};
+
+//     cout << f.get(N).v << endl;
+
+//     return 0;
+// }
+
