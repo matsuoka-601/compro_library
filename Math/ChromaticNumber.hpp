@@ -63,7 +63,7 @@ int chromatic_number(std::vector< std::vector<int> > &g) {
     }
 
     independent_set_cnt_in[0] = 1;
-    for (int i = 0; i < (1 << N); i++) {
+    for (int i = 1; i < (1 << N); i++) {
         int v = __builtin_ctz(i);
         independent_set_cnt_in[i] = independent_set_cnt_in[i & ~(1 << v)] + independent_set_cnt_in[i & ~(adj_bits[v])];
     }
