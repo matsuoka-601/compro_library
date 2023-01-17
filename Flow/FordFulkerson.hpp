@@ -1,48 +1,23 @@
 #pragma once
-#include <queue>
 #include <vector>
-#include <limits>
 #include <assert.h>
 
-// this implementation is based on
-// https://megalodon.jp/2022-0108-1135-33/https://kopricky.github.io:443/code/NetworkFlow/dinic.html
-
-// verify:
-// https://judge.u-aizu.ac.jp/onlinejudge/review.jsp?rid=6190842
-
-template<class Cap> class Dinic {
+template<class Cap> class FordFulkerson {
     int n;
-    std::vector<int> level, iter;
     struct _Edge {
         int to, rev;
         Cap cap;
     };
     std::vector< std::vector<_Edge> > g;
+    std::vector<bool> used;
     std::vector< std::pair<int, int> > pos;
-
-    void bfs(int s) {
-        fill(level.begin(), level.end(), -1);
-        std::queue<int> que;
-        level[s] = 0;
-        que.push(s);
-        while (!que.empty()) {
-            int v = que.front();
-            que.pop();
-            for (auto& e : g[v]) {
-                if (e.cap > 0 && level[e.to] < 0) {
-                    level[e.to] = level[v] + 1;
-                    que.push(e.to);
-                }
-            }
-        }
-    }
 
     Cap dfs(int v, int t, Cap f) {
         if (v == t)
-            return f;
-        for (int& i = iter[v]; i < (int)g[v].size(); i++) {
-            _Edge& e = g[v][i];
-            if (e.cap > 0 && level[v] < level[e.to]) {
+            return f; // minimum capacity along the augmenting path
+        used[v] = true;
+        for (auto &e: g[v]) {
+            if (!used[e.to] && e.cap > 0) {
                 Cap d = dfs(e.to, t, std::min(f, e.cap));
                 if (d > 0) {
                     e.cap -= d;
@@ -53,11 +28,11 @@ template<class Cap> class Dinic {
         }
         return 0;
     }
-
+    
 public:
 
-    Dinic(const int node_size) : 
-        n(node_size), level(n), iter(n), g(n) {}
+    FordFulkerson(const int node_size) : 
+        n(node_size), g(n), used(n) {}
 
     void add_edge(int from, int to, Cap cap) {
         assert(from != to);
@@ -77,12 +52,11 @@ public:
     Cap solve(int s, int t) {
         Cap flow = 0;
         for (;;) {
-            bfs(s);
-            if (level[t] < 0) return flow;
-            Cap f;
-            fill(iter.begin(), iter.end(), 0);
-            while ((f = dfs(s, t, std::numeric_limits<Cap>::max())) > 0)
-                flow += f;
+            std::fill(used.begin(), used.end(), false);
+            Cap f = dfs(s, t, std::numeric_limits<Cap>::max());
+            if (f == 0) 
+                return flow;
+            flow += f;
         }
     }
 
