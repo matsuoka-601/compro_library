@@ -91,7 +91,7 @@ public:
         Cap cap, flow;
     };
 
-    Edge get_edge(int edge_id) {
+    Edge get_edge(int edge_id) const {
         int sz = pos.size();
         assert(0 <= edge_id && edge_id < sz);
         auto e = g[pos[edge_id].first][pos[edge_id].second];
@@ -99,7 +99,7 @@ public:
         return Edge{pos[edge_id].first, e.to, e.cap + re.cap, re.cap};
     }
 
-    std::vector<Edge> get_edges() {
+    std::vector<Edge> get_edges() const {
         std::vector<Edge> edges;
         int sz = pos.size();
         for (int i = 0; i < sz; i++)

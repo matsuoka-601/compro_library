@@ -1,13 +1,15 @@
+#pragma once
 // verified at:
 // https://atcoder.jp/contests/abc145/submissions/33704571
 
 template <long long MOD, int NMAX> class ModComb {
     using ll = long long;
 
+
+public:
     // fac[i]: i! % MOD
     // finv[i]: i^{-1} 
     ll fac[NMAX + 1], finv[NMAX + 1], inv[NMAX + 1];
-public:
     ModComb() {
         fac[0] = fac[1] = 1;
         finv[0] = finv[1] = 1;

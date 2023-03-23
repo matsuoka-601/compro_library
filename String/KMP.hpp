@@ -2,7 +2,8 @@
 #include <string>
 #include <vector>
 
-std::vector<int> compute_prefix_function(const std::string &pattern) {
+template<class T> std::vector<int> 
+    compute_prefix_function(const T &pattern) {
     const int m = (int)pattern.size();
     std::vector<int> prefix_function(m+1);
 
@@ -18,9 +19,9 @@ std::vector<int> compute_prefix_function(const std::string &pattern) {
     return prefix_function;
 }
 
-std::vector<int> kmp_matcher(
-    const std::string &text, 
-    const std::string &pattern
+template<class T> std::vector<int> kmp_matcher(
+    const T &text, 
+    const T &pattern
 ) {
     const int n = (int)text.size();
     const int m = (int)pattern.size();

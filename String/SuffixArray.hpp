@@ -8,7 +8,7 @@
 
 // this implemantation is based on
 // https://megalodon.jp/2022-0430-1612-24/https://wk1080id.hatenablog.com:443/entry/2018/12/25/005926
-// the construction of suffix array is O(nlogn), where n is the length of the string
+// the construction of suffix array is O(nlogn) where n is the length of the string
 
 class SuffixArray
 {
