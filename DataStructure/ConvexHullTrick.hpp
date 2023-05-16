@@ -1,6 +1,12 @@
 #pragma once
 #include <queue>
 
+
+// verified at:
+// https://atcoder.jp/contests/abc289/submissions/40441513
+// slope : ascending order
+// query : descending order
+// min query
 class ConvexHullTrick {
     using Line = std::pair<long long, long long>;
     std::deque<Line> lines;

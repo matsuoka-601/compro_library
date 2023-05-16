@@ -13,3 +13,8 @@ long long extGCD(long long a, long long b, long long &x, long long &y) {
     y -= (a / b) * x;
     return d;
 }
+
+long long gcd(long long a, long long b) {
+    long long unused1, unused2;
+    return extGCD(a, b, unused1, unused2);
+}
