@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <assert.h>
 
 // verified at:
 // https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_B&lang=jp
@@ -8,7 +9,7 @@ template<typename T> class BIT {
     std::vector<T> bit;
 
     void add_impl(int idx, T x) {
-        for (int i = idx; i <= n; i += i & -i)
+        for (int i = idx; i < n; i += i & -i)
             bit[i] += x;
     }
 
@@ -31,11 +32,19 @@ public:
 
     // v[idx] += x (0-indexed)
     void add(const int idx, const T x) {
+        assert(idx < n-1);
         add_impl(idx + 1, x);
     }
 
+    // v[idx] = x (0-indexed)
     void update(int idx, T x) {
+        assert(idx < n-1);
         T cur = query(idx, idx+1);
         add(idx, x-cur);
+    }
+
+    T get(int idx) {
+        assert(idx < n-1);
+        return query(idx, idx+1);
     }
 };
