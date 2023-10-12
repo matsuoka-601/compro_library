@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <assert.h>
+#include <cassert>
 
 // verified at:
 // https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=DSL_2_B&lang=jp

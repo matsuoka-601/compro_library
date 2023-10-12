@@ -12,7 +12,6 @@ class HLD {
     Graph g;
     int root;
 
-    std::vector<int> parent, sz, in, out, head;
 
     void size_dfs(int v, int p) {
         sz[v] = 1, parent[v] = p;
@@ -41,6 +40,8 @@ class HLD {
         out[v] = tm;
     }
 public:
+    std::vector<int> parent, sz, in, out, head;
+
     HLD(int n_) : n(n_), g(n_), parent(n_), sz(n_), in(n_), out(n_), head(n_) {}
 
     void add_edge(int a, int b) {
@@ -51,9 +52,9 @@ public:
     void build(int _root = 0) {
         root = _root;
         int tm = 0;
-        size_dfs(0, -1);
+        size_dfs(root, -1);
         head[root] = root;
-        build_dfs(0, -1, tm);
+        build_dfs(root, -1, tm);
     }
 
     void subtree_query(int a, const std::function< void(int, int) > &func) {

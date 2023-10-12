@@ -106,4 +106,28 @@ public:
             edges.push_back(get_edge(i));
         return edges;
     }
+
+
+    std::vector<bool> cut(int s) const {
+        std::vector<bool> used(n, false);
+        std::vector<bool> ans(n, false);
+        std::queue<int> que;
+
+        used[s] = true;
+        que.push(s);
+
+        while (!que.empty()) {
+            int v = que.front();
+            que.pop();            
+            ans[v] = true;
+            for (auto &e: g[v]) {
+                if (!used[e.to] && e.cap > 0) {
+                    que.push(e.to);
+                    used[e.to] = true;
+                }
+            }
+        }
+
+        return ans;
+    }
 };

@@ -88,3 +88,44 @@ public:
         return (int)nodes.size();
     }
 };
+
+
+// Light Trie
+
+// int nodes[(int)1e6 + 5][26];
+// bool accept[(int)1e6 + 5];
+
+// void trie_insert(string &s) {
+//     int cur_node = 0;
+//     int cur = 0;
+//     for (auto &c: s) {
+//         int idx = c - 'a';
+//         if (nodes[cur_node][idx] == 0) {
+//             nodes[cur_node][idx] = ++ptr;
+//             memset(nodes[ptr], 0, sizeof(nodes[ptr]));
+//             accept[ptr] = false;
+//         }
+//         cur_node = nodes[cur_node][idx];
+//         cur++;
+//     }
+//     accept[cur_node] = true;
+// }
+
+// int trie_match(string &s, int beg) {
+//     int cur_node = 0;
+//     for (int i = beg; i < s.size(); i++) {
+//         int idx = s[i] - 'a';
+//         if (nodes[cur_node][idx] == 0) 
+//             return 0;
+//         cur_node = nodes[cur_node][idx];
+//         if (accept[cur_node])
+//             return i - beg + 1;
+//     }
+//     return 0;
+// }
+
+// void trie_init() {
+//     ptr = 0;
+//     memset(nodes[0], 0, sizeof(nodes[0]));
+//     accept[0] = false;
+// }
