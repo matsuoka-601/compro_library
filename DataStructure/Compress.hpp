@@ -3,8 +3,9 @@
 #include <algorithm>
 
 template <class T> class Compress {
-    std::vector<T> compressed;
 public:
+    std::vector<T> compressed;
+
     Compress (std::vector<T> &v) {
         for (auto &x : v)
             compressed.push_back(x);
