@@ -3,19 +3,6 @@
 
 class CentroidDecomposition {
     using Graph = std::vector<std::vector<int>>;
-public:
-    std::vector<bool> checked;
-    std::vector<size_t> subtree_size;
-    const Graph& g;
-    int N;
-
-    CentroidDecomposition(const Graph& g): g(g) {
-        N = g.size();
-        checked.resize(N);
-        subtree_size.resize(N);
-        for (int i = 0; i < N; i++) checked[i] = false;
-        for (int i = 0; i < N; i++) subtree_size[i] = 0;
-    }
 
     size_t calc_subtree_size(int v, int par = -1) {
         subtree_size[v] = 1;
@@ -43,6 +30,20 @@ public:
             tree[centroid].push_back(build_dfs(to, tree));
         }
         return centroid;
+    }
+
+public:
+    std::vector<bool> checked;
+    std::vector<size_t> subtree_size;
+    const Graph& g;
+    int N;
+
+    CentroidDecomposition(const Graph& g): g(g) {
+        N = g.size();
+        checked.resize(N);
+        subtree_size.resize(N);
+        for (int i = 0; i < N; i++) checked[i] = false;
+        for (int i = 0; i < N; i++) subtree_size[i] = 0;
     }
 
     int build(Graph &tree) {

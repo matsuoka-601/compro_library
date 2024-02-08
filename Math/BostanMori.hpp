@@ -7,8 +7,8 @@
 // public:
 //     NaiveNTT() {}
 
-//     vector<Mint> convolution(const vector<Mint> &a, const vector<Mint> &b) const {
-//         vector<Mint> ret(a.size() + b.size() - 1);
+//     std::vector<Mint> convolution(const std::vector<Mint> &a, const std::vector<Mint> &b) const {
+//         std::vector<Mint> ret(a.size() + b.size() - 1);
 //         for (int i = 0; i < a.size(); i++)
 //             for (int j = 0; j < b.size(); j++)
 //                 ret[i + j] += a[i] * b[j];
@@ -16,11 +16,12 @@
 //     }
 // };
 
-template<class T, class NTTType> class BostanMori{
-    std::vector<T> p, q;
+template<int MOD, class NTTType> class BostanMori{
+    using Mint = ModInt<MOD>;
+    std::vector<Mint> p, q;
     NTTType ntt;
 public:
-    BostanMori(std::vector<T> &a, std::vector<T> &c) {
+    BostanMori(std::vector<Mint> &a, std::vector<Mint> &c) {
         assert(a.size() == c.size());
         int d = c.size();
         q.resize(d + 1);
@@ -30,10 +31,13 @@ public:
         p.resize(d);
     }
 
-    T rec(vector<T> _p, vector<T> _q, ll n) const {
+    BostanMori() {}
+
+    Mint rec(std::vector<Mint> _p, std::vector<Mint> _q, long long n) const {
         while (n) {
             assert(_q[0] == 1);
-            int d = _q.size(); vector<T> _qminus(_q);
+            int d = _q.size(); 
+            std::vector<Mint> _qminus(_q);
             for (int i = 1; i < d; i += 2) _qminus[i] = -_qminus[i];
             _p = ntt.convolution(_p, _qminus);
             _q = ntt.convolution(_q, _qminus);
@@ -48,5 +52,5 @@ public:
         return _p[0]; 
     }
 
-    T operator[] (const ll n) const { return rec(p, q, n); }
+    Mint operator[] (const long long n) const { return rec(p, q, n); }
 };

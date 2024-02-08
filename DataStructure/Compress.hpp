@@ -13,16 +13,12 @@ public:
         compressed.erase(std::unique(compressed.begin(), compressed.end()), compressed.end());
     }
 
-    int get_min_idx_geq(const T &x) const {
+    int lb(const T &x) const {
         return std::distance(compressed.begin(), std::lower_bound(compressed.begin(), compressed.end(), x));
     }
 
-    int get_max_idx_leq(const T &x) const {
-        auto itr = std::upper_bound(compressed.begin(), compressed.end(), x);
-        if (itr == compressed.begin())
-            return -1;
-        else
-            return std::distance(compressed.begin(), --itr);
+    int ub(const T &x) const {
+        return std::distance(compressed.begin(), std::upper_bound(compressed.begin(), compressed.end(), x));
     }
 
     int size() const {

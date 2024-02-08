@@ -1,5 +1,6 @@
 #pragma once
 #include "Utils/ModInt.hpp"
+#include "Math/ModOp.hpp"
 #include <iostream>
 #include <assert.h>
 #include <vector>
@@ -11,7 +12,7 @@ public:
 
     // type : ift or not
     // a.size() should be less than 1 << 23
-    void nft(bool type, std::vector<Mint>& a) {
+    void nft(bool type, std::vector<Mint>& a) const {
         int n = (int)a.size(), s = 0;
         while ((1 << s) < n) s++;
         assert(1 << s == n);
@@ -46,7 +47,7 @@ public:
         }
     }
 
-    std::vector<Mint> convolution(const std::vector<Mint> &a, const std::vector<Mint> &b) {
+    std::vector<Mint> convolution(const std::vector<Mint> &a, const std::vector<Mint> &b) const {
         int n = (int)a.size(), m = (int)b.size();
         if (!n || !m) return {};
         int lg = 0;
@@ -68,3 +69,46 @@ public:
     }
 };
 
+
+
+template<int MOD> class ArbitraryModNTT {
+    using Mint = ModInt<MOD>;
+public:
+    ArbitraryModNTT() {}
+
+    std::vector<Mint> convolution(std::vector<Mint> &a, std::vector<Mint> &b) const {
+        int n = a.size();
+        int m = b.size();
+        constexpr size_t MOD1 = 167772161;
+        constexpr size_t MOD2 = 469762049;
+        constexpr size_t MOD3 = 1224736769;
+        using Mint1 = ModInt<MOD1>;
+        using Mint2 = ModInt<MOD2>;
+        using Mint3 = ModInt<MOD3>;
+
+        NTT<MOD1, 3> ntt1;
+        NTT<MOD2, 3> ntt2;
+        NTT<MOD3, 3> ntt3;
+
+        std::vector<Mint1> a1(n), b1(m);
+        std::vector<Mint2> a2(n), b2(m);
+        std::vector<Mint3> a3(n), b3(m);
+
+        for (int i = 0; i < n; i++) a1[i] = (a[i].v) % MOD1, a2[i] = (a[i].v) % MOD2, a3[i] = (a[i].v) % MOD3;
+        for (int i = 0; i < m; i++) b1[i] = (b[i].v) % MOD1, b2[i] = (b[i].v) % MOD2, b3[i] = (b[i].v) % MOD3;
+        auto c1 = ntt1.convolution(a1, b1);
+        auto c2 = ntt2.convolution(a2, b2);
+        auto c3 = ntt3.convolution(a3, b3);
+
+        std::vector<Mint> c(c1.size());
+        const Mint2 m1_inv_m2 = modinv(MOD1, MOD2);
+        const Mint3 m1m2_inv_m3 = modinv((Mint3(MOD1) * MOD2).v, MOD3);
+        for (int i = 0; i < c1.size(); i++) {
+            long long t1 = (m1_inv_m2 * ((long long)c2[i].v - c1[i].v)).v;
+            long long t = (m1m2_inv_m3 * ((long long)c3[i].v - t1 * MOD1 - c1[i].v)).v;
+            c[i] = Mint(t) * MOD1 * MOD2 + Mint(t1) * MOD1 + c1[i].v;
+        }
+
+        return c;
+    }
+};
